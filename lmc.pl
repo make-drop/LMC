@@ -66,11 +66,11 @@ decode(Cod_istr, State, Next_pc, NewState) :-
 
 %EXECUTE
 %ADDITION
-execute(49, COD_Numero_Cella, State, Next_Pc, NewState) :-
+execute(49, COD_Cell_Number, State, Next_Pc, NewState) :-
     State = [Acc, _, Mem, In, Out, _],
-    COD_Numero_Cella = [_, _],
-    number_codes(Numero_Cella, COD_Numero_Cella),
-    nth0(Numero_Cella, Mem, Valore_Cella, _),
+    COD_Cell_Number = [_, _],
+    number_codes(Cell_Number, COD_Cell_Number),
+    nth0(Cell_Number, Mem, Valore_Cella, _),
     New_Acc is Acc + Valore_Cella,
     flag(New_Acc, New_Flag),
     Acc_Mod is New_Acc mod 1000,
@@ -78,11 +78,11 @@ execute(49, COD_Numero_Cella, State, Next_Pc, NewState) :-
     !.
 
 %SUBTRACTION
-execute(50, COD_Numero_Cella, State, Next_Pc, NewState) :-
+execute(50, COD_Cell_Number, State, Next_Pc, NewState) :-
     State = [Acc, _, Mem, In, Out, _],
-    COD_Numero_Cella = [_, _],
-    number_codes(Numero_Cella, COD_Numero_Cella),
-    nth0(Numero_Cella, Mem, Valore_Cella, _),
+    COD_Cell_Number = [_, _],
+    number_codes(Cell_Number, COD_Cell_Number),
+    nth0(Cell_Number, Mem, Valore_Cella, _),
     New_Acc is Acc - Valore_Cella,
     flag(New_Acc, New_Flag),
     Acc_Mod is New_Acc mod 1000,
@@ -90,20 +90,20 @@ execute(50, COD_Numero_Cella, State, Next_Pc, NewState) :-
     !.
 
 %STORE
-execute(51, COD_Numero_Cella, State, Next_Pc, NewState) :-
+execute(51, COD_Cell_Number, State, Next_Pc, NewState) :-
      State = [Acc, _, Mem, In, Out, Flag],
-     COD_Numero_Cella = [_, _],
-     number_codes(Numero_Cella, COD_Numero_Cella),
-     replace(Acc, Numero_Cella, Mem, NewMem),
+     COD_Cell_Number = [_, _],
+     number_codes(Cell_Number, COD_Cell_Number),
+     replace(Acc, Cell_Number, Mem, NewMem),
      NewState = state(Acc, Next_Pc, NewMem, In, Out, Flag),
      !.
 
 %LOAD
-execute(53, COD_Numero_Cella, State, Next_Pc, NewState) :-
+execute(53, COD_Cell_Number, State, Next_Pc, NewState) :-
      State = [_, _, Mem, In, Out, Flag],
-     COD_Numero_Cella = [_, _],
-     number_codes(Numero_Cella, COD_Numero_Cella),
-     nth0(Numero_Cella, Mem, NewAcc, _),
+     COD_Cell_Number = [_, _],
+     number_codes(Cell_Number, COD_Cell_Number),
+     nth0(Cell_Number, Mem, NewAcc, _),
      NewState = state(NewAcc, Next_Pc, Mem, In, Out, Flag),
      !.
 
@@ -189,18 +189,18 @@ next_program_counter(X, Y) :-
     Y is X + 1.
 
 %set label, use of dynamic memory
-set_label([X, Y, Z], Numero_Cella, [Y, Z]) :-
+set_label([X, Y, Z], Cell_Number, [Y, Z]) :-
     not(atom_number(X, _)),
     list_istructions(List),
     not(member(X, List)),
-    asserta(label(X, Numero_Cella)),
+    asserta(label(X, Cell_Number)),
     !.
 
-set_label([X, Y], Numero_Cella,  [Y]) :-
+set_label([X, Y], Cell_Number,  [Y]) :-
     not(atom_number(X, _)),
     list_istructions(List),
     not(member(X, List)),
-    asserta(label(X, Numero_Cella)),
+    asserta(label(X, Cell_Number)),
     !.
 
 set_label([X, Y], _,  [X, Y]) :-
@@ -443,7 +443,7 @@ assembly([X | Y], Mem, Counter) :-
     append([Machine_code], Mem_Y, Mem).
 
 assembly(_, _, _) :-
-    write("Too many instruction"),
+    write("Too many instructions"),
     false.
 
 %Split string
